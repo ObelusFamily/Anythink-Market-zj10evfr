@@ -6,6 +6,8 @@ var User = mongoose.model("User");
 var auth = require("../auth");
 const { sendEvent } = require("../../lib/event");
 
+const { Configuration, OpenAIApi } = require("openai");
+
 // Preload item objects on routes with ':item'
 router.param("item", function(req, res, next, slug) {
   Item.findOne({ slug: slug })
@@ -147,11 +149,34 @@ router.post("/", auth.required, function(req, res, next) {
       var item = new Item(req.body.item);
 
       item.seller = user;
+  
+      if (item.image == "") {
+        // generate dall-e image
+        const configuration = new Configuration({
+          apiKey: process.env.OPENAI_API_KEY,
+        });
+        
+        const openai = new OpenAIApi(configuration);
+        (openai.createImage({
+          prompt: item.title,
+          n: 1,
+          size: "256x256",
+        })).then(response => response.data.data[0].url).then((image_url) => {
+          item.image = image_url;
+          return item.save().then(function() {
+            sendEvent('item_created', { item: req.body.item })
+            return res.json({ item: item.toJSONFor(user) });
+          });
+        });
+      } else {
 
-      return item.save().then(function() {
-        sendEvent('item_created', { item: req.body.item })
-        return res.json({ item: item.toJSONFor(user) });
-      });
+        return item.save().then(function() {
+          sendEvent('item_created', { item: req.body.item })
+          return res.json({ item: item.toJSONFor(user) });
+        });
+      }
+
+      
     })
     .catch(next);
 });
