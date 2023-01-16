@@ -150,7 +150,7 @@ router.post("/", auth.required, function(req, res, next) {
 
       item.seller = user;
   
-      if (item.image == "") {
+      if (!item.image) {
         // generate dall-e image
         const configuration = new Configuration({
           apiKey: process.env.OPENAI_API_KEY,
