@@ -11,12 +11,11 @@ const mapDispatchToProps = (dispatch) => ({
 function CommentInput({ slug, onSubmit, currentUser }) {
   const [body, setBody] = useState("");
 
-  const createComment = async (e) => {
+  const createComment = (e) => {
     e.preventDefault();
-    const payload = await agent.Comments.create(slug, {
+    agent.Comments.create(slug, {
       body
-    });
-    onSubmit(payload);
+    }).then((payload) => onSubmit(payload));
     setBody("");
   };
 
