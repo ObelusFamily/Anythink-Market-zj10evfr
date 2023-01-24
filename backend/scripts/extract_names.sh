@@ -1,1 +1,1 @@
-node extract_names.js $1
+node scripts/extract_names.js $1
