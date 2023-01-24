@@ -2,6 +2,7 @@ import React from "react";
 import agent from "../../agent";
 import { connect } from "react-redux";
 import { ADD_COMMENT } from "../../constants/actionTypes";
+import { useState } from "react";
 
 const mapDispatchToProps = (dispatch) => ({
   onSubmit: (payload) => dispatch({ type: ADD_COMMENT, payload }),
@@ -10,7 +11,7 @@ const mapDispatchToProps = (dispatch) => ({
 function CommentInput({ slug, onSubmit, currentUser }) {
   const [body, setBody] = useState("");
 
-  createComment = async (e) => {
+  const createComment = async (e) => {
     e.preventDefault();
     const payload = await agent.Comments.create(slug, {
       body
