@@ -1,0 +1,1 @@
+node scripts/extract_names.js $1
