@@ -60,9 +60,9 @@ function Header(props) {
       </Link>
 
       {props.currentUser ? (
-        <LoggedInView currentUser={this.props.currentUser} />
+        <LoggedInView currentUser={props.currentUser} />
       ) : (
-        <LoggedOutView currentUser={this.props.currentUser} />
+        <LoggedOutView currentUser={props.currentUser} />
       )}
     </nav>
   );
